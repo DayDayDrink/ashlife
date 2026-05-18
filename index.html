@@ -580,11 +580,12 @@ function withTimeout(promise, ms=6000){
   try{
     if(loaderTxt) loaderTxt.textContent='正在连接数据库…';
     await withTimeout(loadLib(), 3000);
-    renderLibrary();renderRoutineMgr();
     if(loaderTxt) loaderTxt.textContent='正在加载今日数据…';
     const has=await withTimeout(loadDay(), 3000);
     loader.style.display='none';
     setTimeout(function(){
+      try{if(typeof window.renderLibrary==='function')window.renderLibrary();}catch(e2){}
+      try{if(typeof window.renderRoutineMgr==='function')window.renderRoutineMgr();}catch(e2){}
       if(has){
         try{if(typeof window.applyBlockTimes==='function')window.applyBlockTimes();}catch(e2){}
         try{if(typeof window.renderTimeline==='function')window.renderTimeline();}catch(e2){}
@@ -593,6 +594,8 @@ function withTimeout(promise, ms=6000){
         var sm=document.getElementById('screen-main');if(sm)sm.classList.add('active');
         window._syncOn=true;startRT();showSync('已恢复今日数据 ✓');
       } else {
+        try{if(typeof window.renderLibrary==='function')window.renderLibrary();}catch(e2){}
+        try{if(typeof window.renderRoutineMgr==='function')window.renderRoutineMgr();}catch(e2){}
         document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
         var ss=document.getElementById('screen-start');if(ss)ss.classList.add('active');
       }
