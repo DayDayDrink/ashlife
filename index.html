@@ -738,14 +738,57 @@ function appendTC(t,bid){
   c.appendChild(div);
 }
 
-function buildC(t){const r=t.reflection||{};return '<div class="rp-row"><div class="rp-lbl">开始</div><input class="t-mini" id="rs-'+t.id+'" type="time" value="'+(r.startTime||'')+'"><div class="rp-sep">→</div><div class="rp-lbl" style="width:auto">结束</div><input class="t-mini" id="re-'+t.id+'" type="time" value="'+(r.endTime||'')+'"></div><div class="rp-row"><div class="rp-lbl">分神</div><div class="chip-row" id="rd-'+t.id+'">'+[0,1,2,3,'4+'].map(n=>'<button class="chip'+(r.distract==n?' on':'')+'" onclick="setDistract('+t.id+',''+n+'')">'+n+'</button>').join('')+'</div></div><div class="rp-row"><div class="rp-lbl">完成后</div><div class="mood-row" id="rm-'+t.id+'">'+[['😊','还好'],['😐','一般'],['😩','想摆烂'],['⚡','亢奋'],['😴','疲惫']].map(([e,l])=>'<button class="mood-btn'+(r.mood===l?' on':'')+'" title="'+l+'" onclick="setMood('+t.id+',''+l+'')">'+e+'</button>').join('')+'</div></div><textarea class="rp-note" id="rn-'+t.id+'" placeholder="感想、收获、遇到的问题、以后怎么改进…">'+(r.note||'')+'</textarea><button class="rp-save" onclick="saveRP('+t.id+')">保存感想</button>';}
-function buildNC(t){const r=t.reflection||{count:0};return '<div class="rp-row"><div class="rp-lbl">处理次数</div><div class="counter-row"><button class="count-btn" onclick="adjCount('+t.id+',-1)">−</button><div class="count-val" id="rc-'+t.id+'">'+(r.count||0)+'</div><button class="count-btn" onclick="adjCount('+t.id+',1)">+</button></div></div><div class="rp-row"><div class="rp-lbl">完成后</div><div class="mood-row" id="rm-'+t.id+'">'+[['😊','还好'],['😐','一般'],['😩','想摆烂'],['⚡','亢奋'],['😴','疲惫']].map(([e,l])=>'<button class="mood-btn'+(r.mood===l?' on':'')+'" title="'+l+'" onclick="setMood('+t.id+',''+l+'')">'+e+'</button>').join('')+'</div></div><textarea class="rp-note" id="rn-'+t.id+'" placeholder="感想、处理情况…">'+(r.note||'')+'</textarea><button class="rp-save" onclick="saveRP('+t.id+')">保存感想</button>';}
-
+function buildC(t){
+  var r=t.reflection||{};
+  var distBtns=[0,1,2,3,'4+'].map(function(n){
+    return '<button class="chip'+(r.distract==n?' on':'')+'" onclick="setDistract('+t.id+',this.textContent)">'+n+'</button>';
+  }).join('');
+  var moodBtns=[['😊','还好'],['😐','一般'],['😩','想摆烂'],['⚡','亢奋'],['😴','疲惫']].map(function(pair){
+    var e=pair[0],l=pair[1];
+    return '<button class="mood-btn'+(r.mood===l?' on':'')+'" title="'+l+'" onclick="setMood('+t.id+',this.title)">'+e+'</button>';
+  }).join('');
+  return '<div class="rp-row"><div class="rp-lbl">开始</div>'
+    +'<input class="t-mini" id="rs-'+t.id+'" type="time" value="'+(r.startTime||'')+'">'
+    +'<div class="rp-sep">→</div>'
+    +'<div class="rp-lbl" style="width:auto">结束</div>'
+    +'<input class="t-mini" id="re-'+t.id+'" type="time" value="'+(r.endTime||'')+'"></div>'
+    +'<div class="rp-row"><div class="rp-lbl">分神</div>'
+    +'<div class="chip-row" id="rd-'+t.id+'">'+distBtns+'</div></div>'
+    +'<div class="rp-row"><div class="rp-lbl">完成后</div>'
+    +'<div class="mood-row" id="rm-'+t.id+'">'+moodBtns+'</div></div>'
+    +'<textarea class="rp-note" id="rn-'+t.id+'" placeholder="感想、收获、遇到的问题、以后怎么改进…">'+(r.note||'')+'</textarea>'
+    +'<button class="rp-save" onclick="saveRP('+t.id+')">保存感想</button>';
+}
+function buildNC(t){
+  var r=t.reflection||{count:0};
+  var moodBtns=[['😊','还好'],['😐','一般'],['😩','想摆烂'],['⚡','亢奋'],['😴','疲惫']].map(function(pair){
+    var e=pair[0],l=pair[1];
+    return '<button class="mood-btn'+((r.mood===l)?' on':'')+'" title="'+l+'" onclick="setMood('+t.id+',this.title)">'+e+'</button>';
+  }).join('');
+  return '<div class="rp-row"><div class="rp-lbl">处理次数</div>'
+    +'<div class="counter-row">'
+    +'<button class="count-btn" onclick="adjCount('+t.id+',-1)">−</button>'
+    +'<div class="count-val" id="rc-'+t.id+'">'+(r.count||0)+'</div>'
+    +'<button class="count-btn" onclick="adjCount('+t.id+',1)">+</button>'
+    +'</div></div>'
+    +'<div class="rp-row"><div class="rp-lbl">完成后</div>'
+    +'<div class="mood-row" id="rm-'+t.id+'">'+moodBtns+'</div></div>'
+    +'<textarea class="rp-note" id="rn-'+t.id+'" placeholder="感想、处理情况…">'+(r.note||'')+'</textarea>'
+    +'<button class="rp-save" onclick="saveRP('+t.id+')">保存感想</button>';
+}
 window.adjCount=function(id,d){const t=tasks.find(t=>t.id===id);if(!t)return;if(!t.reflection)t.reflection={count:0};t.reflection.count=Math.max(0,(t.reflection.count||0)+d);const el=document.getElementById('rc-'+id);if(el)el.textContent=t.reflection.count;};
 window.toggleDone=function(id){const t=tasks.find(t=>t.id===id);if(!t)return;t.done=!t.done;const c=document.querySelector('.tc[data-id="'+id+'"]');if(c)c.classList.toggle('done',t.done);updateDashboard();window.saveDay&&window.saveDay();};
 window.toggleRP=function(id){const p=document.getElementById('rp-'+id);if(p)p.style.display=p.style.display==='block'?'none':'block';};
-window.setDistract=function(id,v){const t=tasks.find(t=>t.id===id);if(t){if(!t.reflection)t.reflection={};t.reflection.distract=v;}document.querySelectorAll('#rd-'+id+' .chip').forEach(b=>b.classList.toggle('on',b.textContent==v));};
-window.setMood=function(id,v){const t=tasks.find(t=>t.id===id);if(t){if(!t.reflection)t.reflection={};t.reflection.mood=v;}document.querySelectorAll('#rm-'+id+' .mood-btn').forEach(b=>b.classList.toggle('on',b.title===v));};
+window.setDistract=function(id,v){
+  var t=tasks.find(function(t){return t.id===id;});
+  if(t){if(!t.reflection)t.reflection={};t.reflection.distract=v;}
+  document.querySelectorAll('#rd-'+id+' .chip').forEach(function(b){b.classList.toggle('on',b.textContent==v);});
+};
+window.setMood=function(id,v){
+  var t=tasks.find(function(t){return t.id===id;});
+  if(t){if(!t.reflection)t.reflection={};t.reflection.mood=v;}
+  document.querySelectorAll('#rm-'+id+' .mood-btn').forEach(function(b){b.classList.toggle('on',b.title===v);});
+};
 window.saveRP=function(id){const t=tasks.find(t=>t.id===id);if(!t)return;if(!t.reflection)t.reflection={};if(!t.nonCont){t.reflection.startTime=document.getElementById('rs-'+id)?.value||'';t.reflection.endTime=document.getElementById('re-'+id)?.value||'';}t.reflection.note=document.getElementById('rn-'+id)?.value||'';const p=document.getElementById('rp-'+id);if(p)p.style.display='none';const b=document.querySelector('.tc[data-id="'+id+'"] .tc-btn.ac');if(b)b.textContent='✦';window.saveDay&&window.saveDay();};
 window.deferTask=function(id){const t=tasks.find(t=>t.id===id);if(!t)return;const c=document.querySelector('.tc[data-id="'+id+'"]');if(t.blockId<2){const nb=t.blockId+1;t.blockId=nb;t.deferred=true;if(c)c.remove();appendTC(t,nb);}else{t.deferred=true;if(c){c.classList.add('deferred');const m=c.querySelector('.tc-meta');if(m&&!m.querySelector('.tag-defer')){const tg=document.createElement('span');tg.className='tag tag-defer';tg.textContent='推至明日';m.appendChild(tg);}}}window.saveDay&&window.saveDay();};
 window.openEdit=function(id){_editId=id;const t=tasks.find(t=>t.id===id);if(!t)return;document.getElementById('et-name').value=t.title;document.getElementById('et-cat').value=t.cat;document.getElementById('et-blk').value=String(t.blockId);document.getElementById('et-ddl').value=t.ddl||'';document.getElementById('modal-edit').classList.add('open');};
@@ -821,17 +864,26 @@ function renderUpcomingDDLs(ddlDates,todayId){
     wrap.appendChild(div);
   });
 }
+window.closeDayDetail=function(){var w=document.getElementById('day-detail-wrap');if(w)w.innerHTML='';};
 window.showDayDetail=async function(dateId,dayNum){
-  const wrap=document.getElementById('day-detail-wrap');
-  wrap.innerHTML='<div class="day-detail"><div class="dd-header"><div class="dd-title">'+dayNum+'日 加载中…</div><button class="dd-close" onclick="document.getElementById('day-detail-wrap').innerHTML=''">×</button></div></div>';
-  const data=await window.loadHistory(dateId);
-  if(!data){wrap.innerHTML='<div class="day-detail"><div class="dd-header"><div class="dd-title">'+dayNum+'日</div><button class="dd-close" onclick="document.getElementById('day-detail-wrap').innerHTML=''">×</button></div><div style="font-size:13px;color:var(--muted)">当天无记录</div></div>';return;}
-  const taskList=(data.tasks||[]).map(t=>'<div class="dd-task"><div class="dd-status'+(t.done?' done':'')+'">'+( t.done?'✓':'')+'</div><div>'+t.title+'<span style="font-size:11px;color:var(--muted);margin-left:6px">'+t.cat+'</span></div></div>').join('');
-  const review=data.reviewText?'<div class="dd-review"><strong>复盘：</strong>'+data.reviewText.replace(/
-/g,'<br>')+'</div>':'';
-  wrap.innerHTML='<div class="day-detail"><div class="dd-header"><div class="dd-title">'+dayNum+'日记录</div><button class="dd-close" onclick="document.getElementById('day-detail-wrap').innerHTML=''">×</button></div>'+taskList+review+'</div>';
+  var wrap=document.getElementById('day-detail-wrap');
+  if(!wrap) return;
+  var hdr='<div class="day-detail"><div class="dd-header"><div class="dd-title">'+dayNum+'日</div><button class="dd-close" onclick="closeDayDetail()">×</button></div>';
+  wrap.innerHTML=hdr+'<div style="font-size:13px;color:var(--muted);padding:8px">加载中…</div></div>';
+  var data=await window.loadHistory(dateId);
+  if(!data){
+    wrap.innerHTML=hdr+'<div style="font-size:13px;color:var(--muted)">当天无记录</div></div>';
+    return;
+  }
+  var taskList=(data.tasks||[]).map(function(t){
+    return '<div class="dd-task"><div class="dd-status'+(t.done?' done':'')+'">'+( t.done?'✓':'')+'</div>'
+      +'<div>'+t.title+'<span style="font-size:11px;color:var(--muted);margin-left:6px">'+t.cat+'</span></div></div>';
+  }).join('');
+  var review=data.reviewText
+    ?'<div class="dd-review"><strong>复盘：</strong>'+data.reviewText.split('\n').join('<br>')+'</div>'
+    :'';
+  wrap.innerHTML=hdr+taskList+review+'</div>';
 };
-
 // HISTORY LIST in review tab
 async function loadHistoryList(){
   updateDashboard();
@@ -844,8 +896,7 @@ async function loadHistoryList(){
     const div=document.createElement('div');div.className='ai-card';div.style.marginBottom='8px';div.style.borderLeftColor='var(--muted)';
     const preview=data.reviewText?data.reviewText.slice(0,80)+'…':'无复盘内容';
     div.innerHTML='<div class="ai-lbl" style="color:var(--muted)">'+id+'</div><div class="ai-txt">'+preview+'</div>';
-    div.onclick=()=>{div.querySelector('.ai-txt').innerHTML=data.reviewText.replace(/
-/g,'<br>');};
+    div.onclick=function(){var el=div.querySelector('.ai-txt');if(el&&data.reviewText)el.innerHTML=data.reviewText.split('\n').join('<br>');};
     list.appendChild(div);
   });
 }
@@ -942,10 +993,8 @@ window.generateReview=async function(){
   const prompt='你是效能教练，熟悉认知神经科学和精力管理。用户是研究生，今日数据：'+td+'请理性分析(300字内)：1.逐一回顾每项任务完成情况与感想 2.基于分神次数、时长偏差、状态分析精力分配规律 3.结合脑科学给出3条具体行动建议 4.今晚是否建议继续工作 5.明天第一件事应该是什么。语气专业直接像教练。';
   try{
     const text=await callAI(prompt,700);
-    document.getElementById('ai-today').innerHTML=text.replace(/
-/g,'<br>');
-    document.getElementById('rv-ai-txt').innerHTML=text.replace(/
-/g,'<br>');
+    document.getElementById('ai-today').innerHTML=text.split('\n').join('<br>');
+    document.getElementById('rv-ai-txt').innerHTML=text.split('\n').join('<br>');
     // Extract tomorrow suggestion
     const lines=text.split('\n');const tmrLine=lines.find(function(l){return l.includes('明天')||l.includes('第一');});
     if(tmrLine)document.getElementById('dash-tomorrow').textContent=tmrLine.replace(/[*#]/g,'').trim();
@@ -964,8 +1013,7 @@ window.analyzeLibrary=async function(){
   const prompt='你是任务教练。用户是研究生，存在一定惰性，需要外部推动来推进长期/持续性任务。当前持续性和长期任务：'+contTasks.map(function(t){return t.domain+'/'+t.name+':'+t.note;}).join('|')+'。今日已安排：'+todayTasks+'。请分析（200字内）：1.哪些持续性任务近期明显缺乏推进 2.今日日程是否还有时间安排这些任务 3.本周哪几天适合推进哪个具体任务（给出明确的周X推进XX格式建议）。语气像教练，有点严厉，直接告诉用户该做什么。';
   try{
     const text=await callAI(prompt,500);
-    document.getElementById('lib-ai-txt').innerHTML=text.replace(/
-/g,'<br>');
+    document.getElementById('lib-ai-txt').innerHTML=text.split('\n').join('<br>');
   }catch(e){document.getElementById('lib-ai-txt').textContent='错误：'+e.message;}
   if(btn){btn.textContent='✦ AI 分析任务推进情况';btn.disabled=false;}
 };
