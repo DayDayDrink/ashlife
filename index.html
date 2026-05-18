@@ -922,8 +922,7 @@ window.parseTasks=async function(){
   const prompt='你是任务规划AI。用户是研究生，今日三个时段：第一('+b0+')、第二('+b1+')、第三('+b2+')。优先级：科研>外语>课程>财务>健康>社团。高认知任务安排第一时段。持续性/长期项目包括：'+contProjs+'。用户描述：'+desc+'。返回JSON数组不含其他文字，格式：[{title,cat(科研|外语|课程|健康|财务|社团|其他),block(0|1|2),dur(数字分钟),ddl(字符串空为空字符串),soft(布尔),nonCont(布尔),continuous(布尔)}]。continuous=true表示该任务是持续性/长期推进类型。';
   try{
     const raw=await callAI(prompt,1000);
-    const clean=raw.replace(/```json
-?|```/g,'').trim();
+    const clean=raw.replace(/```json[\s\S]?|```/g,'').trim();
     let parsed;try{parsed=JSON.parse(clean);}catch(je){out.innerHTML='<div style="color:var(--red);font-size:13px;padding:6px">解析失败，请重试。</div>';btn.textContent='✦ 重新分析';btn.disabled=false;return;}
     out.innerHTML='';
     parsed.forEach(item=>{
@@ -939,14 +938,8 @@ window.parseTasks=async function(){
 
 window.generateReview=async function(){
   const btn=document.querySelector('#tab-today .btn-primary');if(btn){btn.textContent='分析中…';btn.disabled=true;}
-  const td=tasks.map(t=>{const r=t.reflection;let dur='未记录';if(!t.nonCont&&r?.startTime&&r?.endTime){const[sh,sm]=r.startTime.split(':').map(Number);const[eh,em]=r.endTime.split(':').map(Number);dur=(eh*60+em)-(sh*60+sm)+'分钟';}if(t.nonCont)dur='处理'+(r?.count||0)+'次';return'【'+(t.done?'完成':'未完成')+'】'+t.title+'('+t.cat+')
-时长:'+dur+'|分神:'+(r?.distract??'未记录')+'|状态:'+(r?.mood||'未记录')+'
-感想:'+(r?.note||'无');}).join('
-
-');
-  const prompt='你是效能教练，熟悉认知神经科学和精力管理。用户是研究生，今日数据：
-'+td+'
-请理性分析(300字内)：1.逐一回顾每项任务完成情况与感想 2.基于分神次数、时长偏差、状态分析精力分配规律 3.结合脑科学给出3条具体行动建议 4.今晚是否建议继续工作 5.明天第一件事应该是什么。语气专业直接像教练。';
+  const td=tasks.map(function(t){const r=t.reflection;let dur='未记录';if(!t.nonCont&&r&&r.startTime&&r.endTime){const sh=parseInt(r.startTime.split(':')[0]),sm=parseInt(r.startTime.split(':')[1]);const eh=parseInt(r.endTime.split(':')[0]),em=parseInt(r.endTime.split(':')[1]);dur=(eh*60+em)-(sh*60+sm)+'分钟';}if(t.nonCont)dur='处理'+((r&&r.count)||0)+'次';return'['+(t.done?'完成':'未完成')+']'+t.title+'('+t.cat+') 时长:'+dur+' 分神:'+((r&&r.distract)||'未记录')+' 状态:'+((r&&r.mood)||'未记录')+' 感想:'+((r&&r.note)||'无');}).join(' | ');
+  const prompt='你是效能教练，熟悉认知神经科学和精力管理。用户是研究生，今日数据：'+td+'请理性分析(300字内)：1.逐一回顾每项任务完成情况与感想 2.基于分神次数、时长偏差、状态分析精力分配规律 3.结合脑科学给出3条具体行动建议 4.今晚是否建议继续工作 5.明天第一件事应该是什么。语气专业直接像教练。';
   try{
     const text=await callAI(prompt,700);
     document.getElementById('ai-today').innerHTML=text.replace(/
@@ -954,8 +947,7 @@ window.generateReview=async function(){
     document.getElementById('rv-ai-txt').innerHTML=text.replace(/
 /g,'<br>');
     // Extract tomorrow suggestion
-    const lines=text.split('
-');const tmrLine=lines.find(l=>l.includes('明天')||l.includes('第一'));
+    const lines=text.split('\n');const tmrLine=lines.find(function(l){return l.includes('明天')||l.includes('第一');});
     if(tmrLine)document.getElementById('dash-tomorrow').textContent=tmrLine.replace(/[*#]/g,'').trim();
     document.getElementById('dash-tomorrow').classList.remove('empty');
     updateDashboard();
@@ -969,19 +961,7 @@ window.analyzeLibrary=async function(){
   const btn=document.querySelector('#tab-library .btn-ai');if(btn){btn.textContent='✦ 分析中…';btn.disabled=true;}
   const contTasks=(window.domains||[]).flatMap(d=>d.projects.filter(p=>p.type==='cont'||p.type==='long').map(p=>({name:p.name,domain:d.name,note:p.note||'无进展备注',lastUpdate:p.note?'有备注':'无最近记录'})));
   const todayTasks=tasks.map(t=>t.title+'('+t.cat+','+( t.done?'完成':'未完成')+')').join('、');
-  const prompt='你是任务教练。用户是研究生，存在一定惰性，需要外部推动来推进长期/持续性任务。
-
-当前持续性和长期任务：
-'+contTasks.map(t=>t.domain+'/'+t.name+'：'+t.note).join('
-')+'
-
-今日已安排：'+todayTasks+'
-
-请分析（200字内）：
-1.哪些持续性任务近期明显缺乏推进（根据备注判断）
-2.今日日程是否还有时间安排这些任务
-3.本周哪几天适合推进哪个具体任务（给出明确的"周X推进XX"格式建议）
-语气像教练，有点严厉，不要过度安慰，要直接告诉用户该做什么。';
+  const prompt='你是任务教练。用户是研究生，存在一定惰性，需要外部推动来推进长期/持续性任务。当前持续性和长期任务：'+contTasks.map(function(t){return t.domain+'/'+t.name+':'+t.note;}).join('|')+'。今日已安排：'+todayTasks+'。请分析（200字内）：1.哪些持续性任务近期明显缺乏推进 2.今日日程是否还有时间安排这些任务 3.本周哪几天适合推进哪个具体任务（给出明确的周X推进XX格式建议）。语气像教练，有点严厉，直接告诉用户该做什么。';
   try{
     const text=await callAI(prompt,500);
     document.getElementById('lib-ai-txt').innerHTML=text.replace(/
