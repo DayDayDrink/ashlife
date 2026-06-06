@@ -325,20 +325,77 @@ textarea.db-ta::placeholder{color:var(--muted);}
 /* History mode banner */
 .hist-mode-banner{background:rgba(196,136,245,0.12);border:1px solid rgba(196,136,245,0.3);border-radius:var(--rsm);padding:8px 12px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--purple);}
 .hist-mode-close{background:none;border:none;color:var(--purple);font-size:16px;cursor:pointer;}
+
+.quad-row{display:flex;gap:5px;padding:4px 11px 0;flex-wrap:wrap;}
+.quad-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-family:'DM Mono',monospace;}
+.q-hi-hi{background:rgba(240,112,112,0.15);color:var(--red);}
+.q-hi-lo{background:rgba(200,240,117,0.08);color:var(--accent);}
+.q-lo-hi{background:rgba(245,192,96,0.12);color:var(--amber);}
+.q-lo-lo{background:rgba(107,107,120,0.2);color:var(--muted);}
+.q-drain{background:rgba(240,112,112,0.1);color:var(--red);}
+.q-restore{background:rgba(110,231,183,0.1);color:var(--green);}
+.q-neutral{background:rgba(107,107,120,0.15);color:var(--muted);}
+.rec-item{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;}
+.rec-item.removed{display:none;}
+.rec-top{display:flex;align-items:flex-start;gap:8px;}
+.rec-chk{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--hint);flex-shrink:0;margin-top:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.rec-chk:hover{border-color:var(--accent);}
+.rec-chk.on{background:var(--accent);border-color:var(--accent);}
+.rec-chk-tick{display:none;font-size:9px;color:#0f0f11;}
+.rec-chk.on .rec-chk-tick{display:block;}
+.rec-body{flex:1;}
+.rec-title{font-size:13px;font-weight:500;margin-bottom:3px;}
+.rec-reason{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:5px;}
+.rec-meta{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+.rec-blk-sel{background:var(--bg3);border:1px solid var(--line);border-radius:var(--rxs);padding:3px 7px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:11px;outline:none;}
+.rec-actions{display:flex;gap:5px;margin-top:8px;}
+.rec-btn{height:24px;padding:0 9px;border-radius:var(--rxs);background:var(--bg3);border:1px solid var(--line);color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.rec-btn.del{color:var(--red);border-color:rgba(240,112,112,0.2);}
+.brief-ai-status{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--muted);line-height:1.6;}
+.block-cfg-row{display:flex;gap:8px;margin-bottom:12px;}
+.block-cfg-item{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:var(--rsm);padding:8px 10px;}
+.bci-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;}
+.bci-name{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.bci-times{display:flex;gap:4px;align-items:center;}
+.routine-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
+.rtn-chip{display:flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:5px 10px;cursor:pointer;font-size:12px;transition:all .15s;}
+.rtn-chip.on{background:rgba(200,240,117,0.1);border-color:rgba(200,240,117,0.3);color:var(--accent);}
+.rtn-chip-dot{width:5px;height:5px;border-radius:50%;background:var(--muted);}
+.rtn-chip.on .rtn-chip-dot{background:var(--accent);}
+.add-task-area{background:var(--bg2);border:1px solid rgba(200,240,117,0.2);border-radius:var(--r);padding:12px 14px;margin-bottom:8px;}
+.add-task-row{display:flex;gap:8px;align-items:center;}
+.add-task-input{flex:1;background:var(--bg3);border:1px solid var(--line);border-radius:var(--rsm);padding:8px 11px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;}
+.add-task-input::placeholder{color:var(--muted);}
+.add-task-btn{height:34px;padding:0 14px;background:var(--accent);color:#0f0f11;border:none;border-radius:var(--rsm);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.proj-time-row{display:flex;gap:8px;padding:0 11px 6px;font-size:11px;color:var(--muted);}
 </style>
 </head>
 <body>
 <div id="loader"><div class="spin"></div><div class="loader-txt" id="loader-txt">正在加载…</div></div>
 <div id="app">
 
-<!-- START -->
+<!-- BRIEFING SCREEN -->
 <div id="screen-start" class="screen">
-  <div class="orb"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="#c8f075" stroke-width="1.2" stroke-dasharray="3 2.5"/><circle cx="16" cy="16" r="4" fill="#c8f075" opacity=".8"/></svg></div>
-  <div class="start-date" id="start-date"></div>
-  <div class="start-hi" id="start-hi"></div>
-  <div class="start-sub">准备好了吗？今天也可以很从容。</div>
-  <div class="hook"><div class="hook-lbl">今日提示</div><div class="hook-txt" id="hook-txt">点击「开始新的一天」，规划时段和任务。</div></div>
-  <button class="btn-accent" onclick="goSetup()">开始新的一天</button>
+  <div style="padding:18px 20px 12px;flex-shrink:0;border-bottom:1px solid var(--line);">
+    <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:4px;" id="start-date"></div>
+    <div style="font-size:20px;font-weight:500;" id="start-hi">今天该做什么？</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px 20px 100px;">
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px;">今天的工作时段</div>
+    <div class="block-cfg-row">
+      <div class="block-cfg-item"><div class="bci-name"><span class="bci-dot" style="background:var(--b0)"></span>第一</div><div class="bci-times"><input class="t-input" id="b0s" type="time" value="09:00"><span class="bc-sep">—</span><input class="t-input" id="b0e" type="time" value="12:00"></div></div>
+      <div class="block-cfg-item"><div class="bci-name"><span class="bci-dot" style="background:var(--b1)"></span>第二</div><div class="bci-times"><input class="t-input" id="b1s" type="time" value="14:00"><span class="bc-sep">—</span><input class="t-input" id="b1e" type="time" value="18:00"></div></div>
+      <div class="block-cfg-item"><div class="bci-name"><span class="bci-dot" style="background:var(--b2)"></span>第三</div><div class="bci-times"><input class="t-input" id="b2s" type="time" value="20:00"><span class="bc-sep">—</span><input class="t-input" id="b2e" type="time" value="23:59"></div></div>
+    </div>
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;margin:14px 0 8px;">今日 Routine</div>
+    <div class="routine-row" id="rtn-chips"></div>
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;margin:16px 0 8px;">AI 推荐今日事项</div>
+    <div class="brief-ai-status" id="brief-ai-status">正在分析你的任务库，生成今日建议…</div>
+    <div id="rec-list"></div>
+    <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;margin:14px 0 8px;">补充今日任务</div>
+    <div class="add-task-area"><div class="add-task-row"><input class="add-task-input" id="extra-task-input" placeholder="随手补充一件事，回车添加…"><button class="add-task-btn" onclick="addExtraTask()">添加</button></div></div>
+    <button class="btn-primary" style="margin-top:10px" onclick="startMain()">开始今天 →</button>
+  </div>
 </div>
 
 <!-- SETUP -->
@@ -633,6 +690,8 @@ function startRT(){
         var sm=document.getElementById('screen-main');if(sm)sm.classList.add('active');
         window._syncOn=true;startRT();showSync('已恢复今日数据 ✓');
       } else {
+        if(typeof window.renderRoutineChips==='function')window.renderRoutineChips();
+        if(typeof window.generateBriefing==='function')window.generateBriefing();
         document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
         var ss=document.getElementById('screen-start');if(ss)ss.classList.add('active');
       }
@@ -679,14 +738,7 @@ function defaultRoutines(){return[
 ];}
 if(!window.routines)window.routines=defaultRoutines();
 
-function defaultDomains(){return[
-  {id:1,name:'科研',icon:'🔬',color:'var(--red)',projects:[{id:10,name:'科研项目 A',type:'long',ddl:'2025-06-30',note:'新方案已有思路，待开展实验',subtasks:[]},{id:11,name:'科研项目 B',type:'cont',ddl:'',note:'需总结方案结果发给老师',subtasks:[]}]},
-  {id:2,name:'外语',icon:'🗣️',color:'var(--blue)',projects:[{id:20,name:'外语文化交流班',type:'routine',ddl:'',note:'每周两节课，需背诵课文',subtasks:[{id:200,title:'第6课预习',ddl:'周四前',done:false}]}]},
-  {id:3,name:'课程',icon:'📚',color:'var(--accent)',projects:[{id:30,name:'课程A报告',type:'short',ddl:'',note:'实验已完成，需汇总写文档',subtasks:[]},{id:31,name:'矩阵理论F课',type:'long',ddl:'7周后',note:'数学理论课，难度大，按计划每天30min',subtasks:[]},{id:32,name:'课程E作业',type:'short',ddl:'5.21',note:'有一定难度，需提前准备',subtasks:[]}]},
-  {id:4,name:'健康',icon:'🏃',color:'var(--green)',projects:[{id:40,name:'每日运动',type:'routine',ddl:'',note:'跑步/游泳/骑行，每次30min',subtasks:[]}]},
-  {id:5,name:'财务',icon:'💰',color:'var(--amber)',projects:[{id:50,name:'财务知识学习',type:'cont',ddl:'',note:'定期管理资金，持续学习',subtasks:[]}]},
-  {id:6,name:'社团',icon:'🎯',color:'var(--purple)',projects:[{id:60,name:'活动策划与跟进',type:'cont',ddl:'',note:'持续推进整体安排',subtasks:[]}]}
-];}
+function defaultDomains(){return [{"id": 1, "name": "科研", "icon": "🔬", "color": "var(--red)", "projects": [{"id": 10, "name": "论文修改（超小波摩擦故障诊断）", "type": "cont", "ddl": "2025-06-30", "importance": "high", "urgency": "high", "energy": "drain", "difficulty": "high", "estimatedHours": 20, "weeklyHours": 6, "startDate": "2025-06-05", "note": "需重新生图、完善逻辑、加自引、跑新模型。考试后6/24后专注推进", "lastUpdated": "2025-06-05", "subtasks": [{"id": 101, "title": "重新生成实验图像", "ddl": "", "done": false}, {"id": 102, "title": "完善论文逻辑结构", "ddl": "", "done": false}, {"id": 103, "title": "增加期刊自引文献", "ddl": "", "done": false}, {"id": 104, "title": "使用最新模型重跑实验", "ddl": "", "done": false}]}, {"id": 11, "name": "科研项目B", "type": "long", "ddl": "", "importance": "high", "urgency": "low", "energy": "drain", "difficulty": "high", "estimatedHours": 30, "weeklyHours": 3, "startDate": "2025-07-01", "note": "等考试结束后再按之前思路推进", "lastUpdated": "2025-05-20", "subtasks": []}]}, {"id": 2, "name": "课程", "icon": "📚", "color": "var(--accent)", "projects": [{"id": 20, "name": "B课课程报告", "type": "short", "ddl": "2025-06-10", "importance": "low", "urgency": "high", "energy": "neutral", "difficulty": "low", "estimatedHours": 1, "weeklyHours": 1, "startDate": "2025-06-05", "note": "已写完只需改格式提交。完美主义放一边，成绩只记通过", "lastUpdated": "2025-06-04", "subtasks": [{"id": 201, "title": "按格式修改", "ddl": "6/9", "done": false}, {"id": 202, "title": "提交", "ddl": "6/10", "done": false}]}, {"id": 21, "name": "C课课程报告（×2）", "type": "short", "ddl": "2025-06-21", "importance": "medium", "urgency": "medium", "energy": "neutral", "difficulty": "medium", "estimatedHours": 8, "weeklyHours": 4, "startDate": "2025-06-05", "note": "出发前完成一份，返校后完成第二份", "lastUpdated": "2025-06-01", "subtasks": [{"id": 211, "title": "第一份报告", "ddl": "6/11", "done": false}, {"id": 212, "title": "第二份报告", "ddl": "6/20", "done": false}]}, {"id": 22, "name": "E课课程报告", "type": "short", "ddl": "2025-06-23", "importance": "medium", "urgency": "medium", "energy": "neutral", "difficulty": "medium", "estimatedHours": 4, "weeklyHours": 4, "startDate": "2025-06-19", "note": "需1个下午，稍微重视。安排6/19-20返校后", "lastUpdated": "2025-06-01", "subtasks": []}, {"id": 23, "name": "F课矩阵论备考", "type": "short", "ddl": "2025-06-22", "importance": "high", "urgency": "high", "energy": "drain", "difficulty": "high", "estimatedHours": 20, "weeklyHours": 8, "startDate": "2025-06-05", "note": "目前复习约25%，考试6/22。出发前推进到50%，回来冲刺", "lastUpdated": "2025-06-04", "subtasks": [{"id": 231, "title": "线性空间+线性映射（已约25%）", "ddl": "", "done": true}, {"id": 232, "title": "矩阵分解（QR/Jordan/谱分解）", "ddl": "6/12", "done": false}, {"id": 233, "title": "矩阵分析（范数/矩阵函数）", "ddl": "6/18", "done": false}, {"id": 234, "title": "刷真题", "ddl": "6/21", "done": false}]}, {"id": 24, "name": "思政考试", "type": "short", "ddl": "2025-06-23", "importance": "low", "urgency": "low", "energy": "neutral", "difficulty": "low", "estimatedHours": 2, "weeklyHours": 2, "startDate": "2025-06-21", "note": "开卷，考前准备即可，低优先级", "lastUpdated": "2025-06-01", "subtasks": []}, {"id": 25, "name": "D课（每周上课）", "type": "routine", "ddl": "2025-06-26", "importance": "medium", "urgency": "low", "energy": "neutral", "difficulty": "low", "estimatedHours": 3, "weeklyHours": 3, "startDate": "2025-06-05", "note": "周四上午10-11:30，还需上课两周", "lastUpdated": "2025-06-05", "subtasks": []}]}, {"id": 3, "name": "外语", "icon": "🗣️", "color": "var(--blue)", "projects": [{"id": 30, "name": "外语文化交流班", "type": "routine", "ddl": "2025-08-05", "importance": "medium", "urgency": "low", "energy": "restore", "difficulty": "medium", "estimatedHours": 40, "weeklyHours": 6, "startDate": "2025-06-05", "note": "周二+周六晚。降低要求，能听多少是多少。8月前至少背2篇课文", "lastUpdated": "2025-06-03", "subtasks": [{"id": 301, "title": "背诵第1篇课文", "ddl": "7/15", "done": false}, {"id": 302, "title": "背诵第2篇课文", "ddl": "8/01", "done": false}]}]}, {"id": 4, "name": "财务", "icon": "💰", "color": "var(--amber)", "projects": [{"id": 40, "name": "股票开户", "type": "short", "ddl": "", "importance": "low", "urgency": "low", "energy": "neutral", "difficulty": "low", "estimatedHours": 2, "weeklyHours": 1, "startDate": "2025-06-10", "note": "不紧急。查攻略+开户，外语老师课上有炒股内容", "lastUpdated": "2025-06-05", "subtasks": [{"id": 401, "title": "查开户攻略", "ddl": "", "done": false}, {"id": 402, "title": "完成开户", "ddl": "", "done": false}]}, {"id": 41, "name": "阅读财报+学习基础知识", "type": "long", "ddl": "", "importance": "medium", "urgency": "low", "energy": "restore", "difficulty": "medium", "estimatedHours": 10, "weeklyHours": 2, "startDate": "2025-06-24", "note": "喜欢做，排在考试后。外语课会讲到，先听课再自学", "lastUpdated": "2025-06-05", "subtasks": []}]}, {"id": 5, "name": "社团", "icon": "🎯", "color": "var(--purple)", "projects": [{"id": 50, "name": "活动策划与跟进", "type": "cont", "ddl": "", "importance": "medium", "urgency": "medium", "energy": "neutral", "difficulty": "medium", "estimatedHours": 5, "weeklyHours": 2, "startDate": "2025-06-05", "note": "间歇推进，不能完全忽视", "lastUpdated": "2025-06-03", "subtasks": []}]}, {"id": 6, "name": "健康", "icon": "🏃", "color": "var(--green)", "projects": [{"id": 60, "name": "运动（飞盘+跑步+游泳）", "type": "routine", "ddl": "", "importance": "high", "urgency": "low", "energy": "restore", "difficulty": "low", "estimatedHours": 3, "weeklyHours": 3, "startDate": "2025-06-05", "note": "最近重新找到跑步感觉！飞盘比赛也在参加，保持", "lastUpdated": "2025-06-05", "subtasks": []}, {"id": 61, "name": "预约医生（睡眠/情绪/PMDD）", "type": "short", "ddl": "2025-06-08", "importance": "high", "urgency": "high", "energy": "neutral", "difficulty": "low", "estimatedHours": 1, "weeklyHours": 1, "startDate": "2025-06-05", "note": "失眠、情绪障碍、PMDD。本周就去预约学校心理咨询或校医院", "lastUpdated": "2025-06-05", "subtasks": [{"id": 611, "title": "预约学校心理咨询或校医院", "ddl": "6/7", "done": false}]}]}, {"id": 7, "name": "生活", "icon": "🏠", "color": "var(--coral)", "projects": [{"id": 70, "name": "回家行程（6/12-6/18）", "type": "short", "ddl": "2025-06-18", "importance": "high", "urgency": "medium", "energy": "restore", "difficulty": "low", "estimatedHours": 0, "weeklyHours": 0, "startDate": "2025-06-12", "note": "6/12晚出发→长沙（陪弟弟/爸爸生日礼）→武汉（见老师/另一半）→6/17哥哥订婚→6/18返校", "lastUpdated": "2025-06-05", "subtasks": [{"id": 701, "title": "买车票机票", "ddl": "6/8", "done": false}, {"id": 702, "title": "准备爸爸生日礼物", "ddl": "6/8", "done": false}, {"id": 703, "title": "哥哥订婚参与", "ddl": "6/17", "done": false}]}]}];}
 if(!window.domains)window.domains=defaultDomains();
 
 var DAYS=['日','一','二','三','四','五','六'];
@@ -744,7 +796,12 @@ function renderRoutineSelector(){
     div.dataset.rid=r.id;box.appendChild(div);
   });
 }
-window.goSetup=function(){renderRoutineSelector();window.showScreen('screen-setup');};
+window.renderRoutineChips=function(){var row=document.getElementById('rtn-chips');if(!row)return;row.innerHTML='';(window.routines||[]).forEach(function(r){var chip=document.createElement('div');chip.className='rtn-chip on';chip.dataset.rid=r.id;chip.innerHTML='<div class="rtn-chip-dot"></div>'+r.name;chip.onclick=function(){chip.classList.toggle('on');};row.appendChild(chip);});};
+window.generateBriefing=async function(){var statusEl=document.getElementById('brief-ai-status');var recList=document.getElementById('rec-list');if(statusEl)statusEl.textContent='正在分析你的任务库，生成今日建议…';if(recList)recList.innerHTML='';var today=new Date();if(today.getHours()<3)today.setDate(today.getDate()-1);var todayStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');var projList=(window.domains||[]).reduce(function(acc,dom){return acc.concat((dom.projects||[]).map(function(p){var daysSince=p.lastUpdated?Math.round((new Date(todayStr)-new Date(p.lastUpdated))/(1000*60*60*24)):999;return dom.name+'/'+p.name+' 重要:'+p.importance+' 紧急:'+p.urgency+' 精力:'+p.energy+' DDL:'+(p.ddl||'无')+' 上次推进:'+daysSince+'天前 进展:'+p.note;}));},[]).join('|');var prompt='你是效能教练。今天'+todayStr+'，用户是研究生。任务：'+projList+'。推荐今日3-5件最该做的事，输出严格JSON数组不含其他文字：[{"title":"任务名","reason":"推荐理由一句话","cat":"科研|外语|课程|健康|财务|社团|生活|其他","block":0,"estMin":60,"importance":"high|medium|low","urgency":"high|medium|low"}]。block是建议时段0/1/2。优先：紧急且重要>重要不紧急>不得不做的紧急事。';try{var raw=await callAI(prompt,800);var clean=raw.replace(/```json[\s\S]?|```/g,'').trim();var items=JSON.parse(clean);if(statusEl)statusEl.textContent='根据你的任务库生成了今日推荐，可编辑删除后点「开始今天」：';renderRecItems(items);}catch(e){if(statusEl)statusEl.textContent='AI生成暂时失败，请手动补充今日任务。错误：'+e.message;}};
+function renderRecItems(items){var list=document.getElementById('rec-list');if(!list)return;list.innerHTML='';(items||[]).forEach(function(item,i){var div=document.createElement('div');div.className='rec-item';div.dataset.idx=i;var q=quadLabel(item.importance||'medium',item.urgency||'medium');div.innerHTML='<div class="rec-top"><div class="rec-chk on" onclick="toggleRec(this)"><span class="rec-chk-tick">✓</span></div><div class="rec-body"><div class="rec-title">'+item.title+'</div><div class="rec-reason">'+item.reason+'</div><div class="rec-meta"><span class="tag '+q.cls+'">'+q.txt+'</span><span class="tag tag-time">~'+item.estMin+'min</span><select class="rec-blk-sel"><option value="0"'+(item.block===0?' selected':'')+'>第一时段</option><option value="1"'+(item.block===1?' selected':'')+'>第二时段</option><option value="2"'+(item.block===2?' selected':'')+'>第三时段</option><option value="soft">突发</option></select></div></div></div><div class="rec-actions"><button class="rec-btn del" onclick="removeRec('+i+')">删除</button></div>';div._data=item;list.appendChild(div);});}
+window.toggleRec=function(chk){chk.classList.toggle('on');};
+window.removeRec=function(iOrEl){if(typeof iOrEl==='number'){var el=document.querySelector('.rec-item[data-idx="'+iOrEl+'"]');if(el)el.classList.add('removed');}else if(iOrEl&&iOrEl.closest){var el=iOrEl.closest('.rec-item');if(el)el.classList.add('removed');}};
+window.addExtraTask=function(){var inp=document.getElementById('extra-task-input');var txt=inp.value.trim();if(!txt)return;var div=document.createElement('div');div.className='rec-item';div.innerHTML='<div class="rec-top"><div class="rec-chk on" onclick="toggleRec(this)"><span class="rec-chk-tick">✓</span></div><div class="rec-body"><div class="rec-title">'+txt+'</div><div class="rec-meta"><select class="rec-blk-sel"><option value="0">第一时段</option><option value="1">第二时段</option><option value="2">第三时段</option><option value="soft">突发</option></select></div></div></div><div class="rec-actions"><button class="rec-btn del" onclick="removeRec(this)">删除</button></div>';div._data={title:txt,cat:'其他',block:2,estMin:30};document.getElementById('rec-list').appendChild(div);inp.value='';};
 window.startMain=async function(){
   blocks[0].start=document.getElementById('b0s').value;blocks[0].end=document.getElementById('b0e').value;
   blocks[1].start=document.getElementById('b1s').value;blocks[1].end=document.getElementById('b1e').value;
@@ -754,12 +811,13 @@ window.startMain=async function(){
     var rid=el.dataset.rid;var r=window.routines.find(function(r){return r.id===rid;});if(!r)return;
     tasks.push({id:taskIdSeq++,title:r.name,cat:r.cat,blockId:r.blockId,ddl:'',done:false,deferred:false,nonCont:false,continuous:false,reflection:null});
   });
-  document.querySelectorAll('#parse-out .po-item').forEach(function(el){
-    var title=el.querySelector('.po-title').textContent;
-    var catEl=el.querySelector('.tag-cat');var cat=catEl?catEl.textContent:'其他';
-    var blkEl=el.querySelector('.tag-blk');var bid=blkEl?parseInt(blkEl.dataset.bid||'0'):0;
-    var ddlEl=el.querySelector('.tag-ddl');var ddl=ddlEl?ddlEl.textContent.replace('DDL ','').trim():'';
-    var isSoft=el.dataset.soft==='1';var nc=el.dataset.nc==='1';var cont=el.dataset.cont==='1';
+  document.querySelectorAll('#rec-list .rec-item:not(.removed)').forEach(function(el){
+    var isChecked=el.querySelector('.rec-chk')&&el.querySelector('.rec-chk').classList.contains('on');
+    if(!isChecked)return;
+    var data=el._data||{};
+    var title=el.querySelector('.rec-title').textContent;
+    var blkSel=el.querySelector('.rec-blk-sel');var bid=blkSel?blkSel.value:'0';
+    var cat=data.cat||'其他';var ddl='';var isSoft=bid==='soft';var nc=false;var cont=false;
     if(isSoft)softTasks.push({id:taskIdSeq++,title:title,ddl:ddl});
     else tasks.push({id:taskIdSeq++,title:title,cat:cat,blockId:bid,ddl:ddl,done:false,deferred:false,nonCont:nc,continuous:cont,reflection:null});
   });
@@ -849,7 +907,8 @@ function buildNC(t){
 }
 
 window.adjCount=function(id,d){var t=tasks.find(function(t){return t.id===id;});if(!t)return;if(!t.reflection)t.reflection={count:0};t.reflection.count=Math.max(0,(t.reflection.count||0)+d);var el=document.getElementById('rc-'+id);if(el)el.textContent=t.reflection.count;};
-window.toggleDone=function(id){var t=tasks.find(function(t){return t.id===id;});if(!t)return;t.done=!t.done;var c=document.querySelector('.tc[data-id="'+id+'"]');if(c)c.classList.toggle('done',t.done);updateDashboard();window.saveDay&&window.saveDay();};
+window.toggleDone=function(id){var t=tasks.find(function(t){return t.id===id;});if(!t)return;t.done=!t.done;var c=document.querySelector('.tc[data-id="'+id+'"]');if(c)c.classList.toggle('done',t.done);
+document.addEventListener('DOMContentLoaded',function(){var ei=document.getElementById('extra-task-input');if(ei)ei.onkeydown=function(e){if(e.key==='Enter')window.addExtraTask();};});updateDashboard();window.saveDay&&window.saveDay();};
 window.toggleRP=function(id){var p=document.getElementById('rp-'+id);if(p)p.style.display=p.style.display==='block'?'none':'block';};
 window.setDistract=function(id,v){var t=tasks.find(function(t){return t.id===id;});if(t){if(!t.reflection)t.reflection={};t.reflection.distract=v;}document.querySelectorAll('#rd-'+id+' .chip').forEach(function(b){b.classList.toggle('on',b.textContent==v);});};
 window.setMood=function(id,v){var t=tasks.find(function(t){return t.id===id;});if(t){if(!t.reflection)t.reflection={};t.reflection.mood=v;}document.querySelectorAll('#rm-'+id+' .mood-btn').forEach(function(b){b.classList.toggle('on',b.title===v);});};
@@ -1011,7 +1070,8 @@ window.regenDayReview=async function(btn){
 
 // HISTORY LIST
 async function loadHistoryList(){
-  updateDashboard();
+  
+document.addEventListener('DOMContentLoaded',function(){var ei=document.getElementById('extra-task-input');if(ei)ei.onkeydown=function(e){if(e.key==='Enter')window.addExtraTask();};});updateDashboard();
   var list=document.getElementById('history-list');
   list.innerHTML='<div style="color:var(--muted);font-size:13px">加载历史…</div>';
   var history=await window.loadRecentHistory();
@@ -1033,6 +1093,10 @@ async function loadHistoryList(){
 }
 
 // LIBRARY
+
+function quadLabel(imp,urg){if(imp==='high'&&urg==='high')return{cls:'q-hi-hi',txt:'重要且紧急'};if(imp==='high'&&urg!=='high')return{cls:'q-hi-lo',txt:'重要不紧急'};if(imp!=='high'&&urg==='high')return{cls:'q-lo-hi',txt:'紧急不重要'};return{cls:'q-lo-lo',txt:'不紧急不重要'};}
+function energyLabel(e){return{drain:{cls:'q-drain',txt:'消耗型'},neutral:{cls:'q-neutral',txt:'中性'},restore:{cls:'q-restore',txt:'恢复型'}}[e]||{cls:'q-neutral',txt:'中性'};}
+function diffLabel(d){return{high:'高难度',medium:'中难度',low:'低难度'}[d]||'中难度';}
 window.renderLibrary=function(){
   var wrap=document.getElementById('lib-domains');if(!wrap)return;wrap.innerHTML='';
   (window.domains||[]).forEach(function(dom,di){
@@ -1064,7 +1128,7 @@ function renderProjs(dom,di){return(dom.projects||[]).map(function(p,pi){
     +'<button class="proj-del" onclick="event.stopPropagation();delProj('+di+','+pi+')" title="删除项目">🗑</button>'
     +'</div>'
     +'<div class="proj-body" id="pbody-'+di+'-'+pi+'">'
-    +'<div class="proj-meta-row"><span class="type-badge '+typeClass(p.type)+'">'+typeLblLib(p.type)+'</span></div>'
+    +'<div class="quad-row"><span class="quad-badge '+q.cls+'">'+q.txt+'</span><span class="quad-badge '+en.cls+'">'+en.txt+'</span><span class="quad-badge q-neutral">'+diffLabel(p.difficulty||'medium')+'</span><span class="type-badge '+typeClass(p.type)+'">'+typeLblLib(p.type)+'</span></div>'+'<div class="proj-time-row">'+( p.estimatedHours?'预计'+p.estimatedHours+'h ':'')+( p.weeklyHours?'每周'+p.weeklyHours+'h':'')+'</div>'
     +'<div class="prog-wrap"><input class="prog-input" value="'+(p.note||'')+'" placeholder="记录最新进展…" onchange="updNote('+di+','+pi+',this.value)"></div>'
     +'<div class="subtask-list" id="slist-'+di+'-'+pi+'">'+renderSubs(p,di,pi)+'</div>'
     +'<div class="sub-add-inline" id="sub-add-'+di+'-'+pi+'">'
@@ -1155,7 +1219,8 @@ window.generateReview=async function(){
     var lines=text.split('\n');var tmrLine=lines.find(function(l){return l.indexOf('明天')>=0||l.indexOf('第一')>=0;});
     if(tmrLine)document.getElementById('dash-tomorrow').textContent=tmrLine.replace(/[*#]/g,'').trim();
     document.getElementById('dash-tomorrow').classList.remove('empty');
-    updateDashboard();
+    
+document.addEventListener('DOMContentLoaded',function(){var ei=document.getElementById('extra-task-input');if(ei)ei.onkeydown=function(e){if(e.key==='Enter')window.addExtraTask();};});updateDashboard();
     await window.saveDayReview(text);
   }catch(e){document.getElementById('ai-today').textContent='错误：'+e.message;}
   if(btn){btn.textContent='重新生成复盘';btn.disabled=false;}
@@ -1170,7 +1235,8 @@ window.analyzeLibrary=async function(){
   if(btn){btn.textContent='✦ AI 分析任务推进情况';btn.disabled=false;}
 };
 
-updateDashboard();
+
+document.addEventListener('DOMContentLoaded',function(){var ei=document.getElementById('extra-task-input');if(ei)ei.onkeydown=function(e){if(e.key==='Enter')window.addExtraTask();};});updateDashboard();
 </script>
 </body>
 </html>
