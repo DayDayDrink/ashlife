@@ -677,23 +677,30 @@ function startRT(){
     await withTimeout(loadLib(),3000);
     if(ltxt)ltxt.textContent='正在加载今日数据…';
     var has=await withTimeout(loadDay(),3000);
+    clearTimeout(_failsafe);
     loader.style.display='none';
     setTimeout(function(){
-      if(typeof window.renderLibrary==='function')window.renderLibrary();
-      if(typeof window.renderRoutineMgr==='function')window.renderRoutineMgr();
-      if(has){
-        if(typeof window.applyBlockTimes==='function')window.applyBlockTimes();
-        if(typeof window.renderTimeline==='function')window.renderTimeline();
-        if(typeof window.renderSoftInbox==='function')window.renderSoftInbox();
-        if(typeof window.renderMemos==='function')window.renderMemos();
+      try{if(typeof window.renderLibrary==='function')window.renderLibrary();}catch(ex){console.error('renderLibrary',ex);}
+      try{if(typeof window.renderRoutineMgr==='function')window.renderRoutineMgr();}catch(ex){console.error('renderRoutineMgr',ex);}
+      try{
+        if(has){
+          try{if(typeof window.applyBlockTimes==='function')window.applyBlockTimes();}catch(ex){}
+          try{if(typeof window.renderTimeline==='function')window.renderTimeline();}catch(ex){}
+          try{if(typeof window.renderSoftInbox==='function')window.renderSoftInbox();}catch(ex){}
+          try{if(typeof window.renderMemos==='function')window.renderMemos();}catch(ex){}
+          document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+          var sm=document.getElementById('screen-main');if(sm)sm.classList.add('active');
+          window._syncOn=true;startRT();showSync('已恢复今日数据 ✓');
+        } else {
+          try{if(typeof window.renderRoutineChips==='function')window.renderRoutineChips();}catch(ex){}
+          try{if(typeof window.generateBriefing==='function')window.generateBriefing();}catch(ex){}
+          document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+          var ss=document.getElementById('screen-start');if(ss)ss.classList.add('active');
+        }
+      }catch(bigEx){
+        console.error('boot render error',bigEx);
         document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-        var sm=document.getElementById('screen-main');if(sm)sm.classList.add('active');
-        window._syncOn=true;startRT();showSync('已恢复今日数据 ✓');
-      } else {
-        if(typeof window.renderRoutineChips==='function')window.renderRoutineChips();
-        if(typeof window.generateBriefing==='function')window.generateBriefing();
-        document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
-        var ss=document.getElementById('screen-start');if(ss)ss.classList.add('active');
+        var fb=document.getElementById('screen-start');if(fb)fb.classList.add('active');
       }
     },100);
   }catch(e){
