@@ -628,7 +628,22 @@ async function loadDay(){
 }
 async function loadLib(){
   var s=await withTimeout(getDoc(doc(db,'meta','library-v1')),5000).catch(function(){return null;});
-  if(s&&s.exists()){var d=s.data();window.domains=d.domains||defaultDomains();window.routines=d.routines||defaultRoutines();window.libSeq=d.libSeq||100;}
+  if(s&&s.exists()){
+    var d=s.data();
+    var loaded=d.domains||[];
+    // Only use loaded data if it has sufficient projects with new fields
+    var hasNewFields=loaded.length>0&&loaded[0].projects&&loaded[0].projects[0]&&loaded[0].projects[0].importance;
+    if(hasNewFields){
+      window.domains=loaded;
+    } else {
+      // Old format or empty - use built-in default which has all current tasks
+      window.domains=defaultDomains();
+      // Save the new format back to Firebase
+      setTimeout(function(){window.saveLib&&window.saveLib();},2000);
+    }
+    window.routines=d.routines||defaultRoutines();
+    window.libSeq=d.libSeq||200;
+  }
 }
 
 window.loadHistory=async function(dateId){
