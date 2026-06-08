@@ -24,7 +24,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .spin{width:32px;height:32px;border-radius:50%;border:2px solid rgba(200,240,117,0.15);border-top-color:var(--accent);animation:spin .8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-txt{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.08em;}
-#screen-start{align-items:center;justify-content:center;padding:40px 24px;}
+#screen-start{flex-direction:column;overflow:hidden;}
 .orb{width:96px;height:96px;border-radius:50%;border:1px solid rgba(200,240,117,0.15);display:flex;align-items:center;justify-content:center;margin-bottom:24px;animation:pulse 3s ease-in-out infinite;}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,240,117,0.05)}50%{box-shadow:0 0 28px 6px rgba(200,240,117,0.1)}}
 .start-date{font-size:11px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px;font-family:'DM Mono',monospace;}
@@ -47,7 +47,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .bc-row{display:flex;align-items:center;gap:8px;}
 .bc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .bc-name{font-size:13px;font-weight:500;flex:1;}
-.t-input{background:var(--bg3);border:1px solid var(--line);border-radius:var(--rxs);padding:5px 9px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;width:76px;outline:none;text-align:center;}
+.t-input{background:var(--bg3);border:1px solid var(--line);border-radius:var(--rxs);padding:4px 2px;color:var(--text);font-family:'DM Mono',monospace;font-size:11px;width:100%;min-width:0;outline:none;text-align:center;}
 .t-input:focus{border-color:rgba(200,240,117,0.3);}
 .bc-sep{font-size:12px;color:var(--muted);}
 .routine-select-box{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:6px;}
@@ -352,11 +352,11 @@ textarea.db-ta::placeholder{color:var(--muted);}
 .rec-btn{height:24px;padding:0 9px;border-radius:var(--rxs);background:var(--bg3);border:1px solid var(--line);color:var(--muted);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;}
 .rec-btn.del{color:var(--red);border-color:rgba(240,112,112,0.2);}
 .brief-ai-status{background:var(--bg2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--muted);line-height:1.6;}
-.block-cfg-row{display:flex;gap:8px;margin-bottom:12px;}
-.block-cfg-item{flex:1;background:var(--bg2);border:1px solid var(--line);border-radius:var(--rsm);padding:8px 10px;}
-.bci-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;}
-.bci-name{font-size:11px;color:var(--muted);margin-bottom:4px;}
-.bci-times{display:flex;gap:4px;align-items:center;}
+.block-cfg-row{display:flex;gap:6px;margin-bottom:12px;}
+.block-cfg-item{flex:1;min-width:0;background:var(--bg2);border:1px solid var(--line);border-radius:var(--rsm);padding:7px 8px;}
+.bci-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:3px;}
+.bci-name{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.bci-times{display:flex;gap:2px;align-items:center;flex-wrap:nowrap;}
 .routine-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px;}
 .rtn-chip{display:flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:5px 10px;cursor:pointer;font-size:12px;transition:all .15s;}
 .rtn-chip.on{background:rgba(200,240,117,0.1);border-color:rgba(200,240,117,0.3);color:var(--accent);}
@@ -380,7 +380,7 @@ textarea.db-ta::placeholder{color:var(--muted);}
     <div style="font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:4px;" id="start-date"></div>
     <div style="font-size:20px;font-weight:500;" id="start-hi">今天该做什么？</div>
   </div>
-  <div style="flex:1;overflow-y:auto;padding:16px 20px 100px;">
+  <div style="flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 20px 100px;">
     <div style="font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:8px;">今天的工作时段</div>
     <div class="block-cfg-row">
       <div class="block-cfg-item"><div class="bci-name"><span class="bci-dot" style="background:var(--b0)"></span>第一</div><div class="bci-times"><input class="t-input" id="b0s" type="time" value="09:00"><span class="bc-sep">—</span><input class="t-input" id="b0e" type="time" value="12:00"></div></div>
@@ -803,8 +803,8 @@ function renderRoutineSelector(){
     div.dataset.rid=r.id;box.appendChild(div);
   });
 }
-window.renderRoutineChips=function(){var row=document.getElementById('rtn-chips');if(!row)return;row.innerHTML='';(window.routines||[]).forEach(function(r){var chip=document.createElement('div');chip.className='rtn-chip on';chip.dataset.rid=r.id;chip.innerHTML='<div class="rtn-chip-dot"></div>'+r.name;chip.onclick=function(){chip.classList.toggle('on');};row.appendChild(chip);});};
-window.generateBriefing=async function(){var statusEl=document.getElementById('brief-ai-status');var recList=document.getElementById('rec-list');if(statusEl)statusEl.textContent='正在分析你的任务库，生成今日建议…';if(recList)recList.innerHTML='';var today=new Date();if(today.getHours()<3)today.setDate(today.getDate()-1);var todayStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');var projList=(window.domains||[]).reduce(function(acc,dom){return acc.concat((dom.projects||[]).map(function(p){var daysSince=p.lastUpdated?Math.round((new Date(todayStr)-new Date(p.lastUpdated))/(1000*60*60*24)):999;return dom.name+'/'+p.name+' 重要:'+p.importance+' 紧急:'+p.urgency+' 精力:'+p.energy+' DDL:'+(p.ddl||'无')+' 上次推进:'+daysSince+'天前 进展:'+p.note;}));},[]).join('|');var prompt='你是效能教练。今天'+todayStr+'，用户是研究生。任务：'+projList+'。推荐今日3-5件最该做的事，输出严格JSON数组不含其他文字：[{"title":"任务名","reason":"推荐理由一句话","cat":"科研|外语|课程|健康|财务|社团|生活|其他","block":0,"estMin":60,"importance":"high|medium|low","urgency":"high|medium|low"}]。block是建议时段0/1/2。优先：紧急且重要>重要不紧急>不得不做的紧急事。';try{var raw=await callAI(prompt,800);var clean=raw.replace(/```json[\s\S]?|```/g,'').trim();var items=JSON.parse(clean);if(statusEl)statusEl.textContent='根据你的任务库生成了今日推荐，可编辑删除后点「开始今天」：';renderRecItems(items);}catch(e){if(statusEl)statusEl.textContent='AI生成暂时失败，请手动补充今日任务。错误：'+e.message;}};
+window.renderRoutineChips=function(){var row=document.getElementById('rtn-chips');if(!row)return;row.innerHTML='';var rtns=window.routines||[{id:'r1',name:'外语背诵 20min',blockId:0,cat:'外语'},{id:'r2',name:'财务记录 5min',blockId:2,cat:'财务'},{id:'r3',name:'运动 30min',blockId:2,cat:'健康'},{id:'r4',name:'F课复习 30min',blockId:2,cat:'课程'}];rtns.forEach(function(r){var chip=document.createElement('div');chip.className='rtn-chip on';chip.dataset.rid=r.id;chip.innerHTML='<div class="rtn-chip-dot"></div>'+r.name;chip.onclick=function(){chip.classList.toggle('on');};row.appendChild(chip);});};
+window.generateBriefing=async function(){var statusEl=document.getElementById('brief-ai-status');var recList=document.getElementById('rec-list');if(statusEl)statusEl.textContent='正在分析你的任务库，生成今日建议…';if(recList)recList.innerHTML='';var today=new Date();if(today.getHours()<3)today.setDate(today.getDate()-1);var todayStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');var projList=(window.domains||[]).reduce(function(acc,dom){return acc.concat((dom.projects||[]).map(function(p){var daysSince=p.lastUpdated?Math.round((new Date(todayStr)-new Date(p.lastUpdated))/(1000*60*60*24)):999;return dom.name+'/'+p.name+' 重要:'+p.importance+' 紧急:'+p.urgency+' 精力:'+p.energy+' DDL:'+(p.ddl||'无')+' 上次推进:'+daysSince+'天前 进展:'+p.note;}));},[]).join('|');var prompt='你是效能教练。今天'+todayStr+'，用户是研究生。任务：'+projList+'。推荐今日3-5件最该做的事，输出严格JSON数组不含其他文字：[{"title":"任务名","reason":"推荐理由一句话","cat":"科研|外语|课程|健康|财务|社团|生活|其他","block":0,"estMin":60,"importance":"high|medium|low","urgency":"high|medium|low"}]。block是建议时段0/1/2。优先：紧急且重要>重要不紧急>不得不做的紧急事。';try{var raw=await callAI(prompt,800);var clean=raw.replace(/```json[\s\S]?|```/g,'').trim();var items=JSON.parse(clean);if(statusEl)statusEl.textContent='根据你的任务库生成了今日推荐，可编辑删除后点「开始今天」：';renderRecItems(items);}catch(e){if(statusEl){statusEl.textContent='AI连接失败（'+e.message+'）。可手动补充今日任务，或检查网络刷新重试。';statusEl.style.color='var(--amber)';}console.error('briefing',e);}};
 function renderRecItems(items){var list=document.getElementById('rec-list');if(!list)return;list.innerHTML='';(items||[]).forEach(function(item,i){var div=document.createElement('div');div.className='rec-item';div.dataset.idx=i;var q=quadLabel(item.importance||'medium',item.urgency||'medium');div.innerHTML='<div class="rec-top"><div class="rec-chk on" onclick="toggleRec(this)"><span class="rec-chk-tick">✓</span></div><div class="rec-body"><div class="rec-title">'+item.title+'</div><div class="rec-reason">'+item.reason+'</div><div class="rec-meta"><span class="tag '+q.cls+'">'+q.txt+'</span><span class="tag tag-time">~'+item.estMin+'min</span><select class="rec-blk-sel"><option value="0"'+(item.block===0?' selected':'')+'>第一时段</option><option value="1"'+(item.block===1?' selected':'')+'>第二时段</option><option value="2"'+(item.block===2?' selected':'')+'>第三时段</option><option value="soft">突发</option></select></div></div></div><div class="rec-actions"><button class="rec-btn del" onclick="removeRec('+i+')">删除</button></div>';div._data=item;list.appendChild(div);});}
 window.toggleRec=function(chk){chk.classList.toggle('on');};
 window.removeRec=function(iOrEl){if(typeof iOrEl==='number'){var el=document.querySelector('.rec-item[data-idx="'+iOrEl+'"]');if(el)el.classList.add('removed');}else if(iOrEl&&iOrEl.closest){var el=iOrEl.closest('.rec-item');if(el)el.classList.add('removed');}};
